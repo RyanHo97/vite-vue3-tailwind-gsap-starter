@@ -3,10 +3,10 @@
 🚀 **Modern Frontend Boilerplate for Animation-Rich Apps**
 🌟 开箱即用的交互动画开发模板 | Production-Ready Starter Kit
 
-https://img.shields.io/badge/Vite-6.0.0-%23646CFF?logo=vite
-https://img.shields.io/badge/Vue-3.3.0-%234FC08D?logo=vuedotjs
-https://img.shields.io/badge/TailwindCSS-4.0.0-%2306B6D4?logo=tailwindcss
-https://img.shields.io/badge/GSAP-3.12.0-%238800FF?logo=greensock
+[![Vite](https://img.shields.io/badge/Vite-6.2.0-%23646CFF?logo=vite)](https://github.com/vitejs/vite)
+[![Vue](https://img.shields.io/badge/Vue-3.5.0-%234FC08D?logo=vuedotjs)](https://github.com/vuejs/core)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0.0-%2306B6D4?logo=tailwindcss)](https://github.com/tailwindlabs/tailwindcss)
+[![GSAP](https://img.shields.io/badge/GSAP-3.12.0-%238800FF?logo=greensock)](https://github.com/greensock/GSAP)
 
 ## ✨ Features 核心功能
 
