@@ -81,6 +81,20 @@ onMounted(() => {
 </template>
 ```
 
+## 🍭主要特性
+
+### 已实现功能
+
+- ✅ Vite 6 基础配置
+- ✅ Vue 3 单文件组件支持
+- ✅ Tailwind CSS 4 完整集成
+- ✅ GSAP 动画库预配置
+- ✅ 基本的路由配置示例
+- ✅ 环境变量支持
+- ✅ ESLint + Prettier 代码规范
+
+
+
 ## 🤝 Contributing 贡献指南
 
 欢迎提交PR或Issue！请确保：
@@ -91,4 +105,6 @@ onMounted(() => {
 
 ## 📜 License 许可证
 
-MIT
+MIT License
+
+这是一个功能完整但仍在测试阶段的 starter 模板。alpha 版本意味着可能还会变化，建议非生产环境上使用。
