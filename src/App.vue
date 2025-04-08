@@ -20,16 +20,9 @@ import Navbar from '@components/layout/Navbar.vue'
 import Footer from '@components/layout/Footer.vue'
 import { useThemeStore } from '@/stores'
 
-// 使用Pinia管理暗黑模式状态
 const themeStore = useThemeStore()
-
-// 计算属性：获取当前暗黑模式状态
 const isDarkMode = computed(() => themeStore.isDarkMode)
 
-// 切换暗黑模式的方法
-const toggleDarkMode = () => themeStore.toggleDarkMode()
-
-// 初始化主题
 onMounted(() => {
   themeStore.initTheme()
 })

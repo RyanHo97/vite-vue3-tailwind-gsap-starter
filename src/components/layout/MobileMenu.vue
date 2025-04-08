@@ -36,18 +36,7 @@ const route = useRoute()
       >
         关于
       </router-link>
-      <router-link
-        to="/contact"
-        class="block px-3 py-2 text-base font-medium"
-        :class="
-          route.path === '/contact'
-            ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50'
-            : 'text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-white'
-        "
-        @click="emit('close')"
-      >
-        联系
-      </router-link>
+
     </div>
   </div>
 </template>

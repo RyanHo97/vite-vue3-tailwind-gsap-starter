@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
 import { gsap } from 'gsap'
 import { useRoute } from 'vue-router'
 import MobileMenu from './MobileMenu.vue'
 import { useThemeStore } from '@/stores'
-
-// 确保 MobileMenu 组件已正确创建
-// 在同一个目录下创建 MobileMenu.vue 文件
 
 // 使用Pinia store管理暗黑模式
 const themeStore = useThemeStore()
@@ -65,7 +61,7 @@ onMounted(() => {
 
 <template>
   <!-- 完整的导航结构 -->
-  <nav class="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-sm border-b border-gray-200 dark:bg-gray-900/90 dark:border-gray-700">
+  <nav class="sticky top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <!-- 左侧logo和导航 -->
@@ -104,14 +100,6 @@ onMounted(() => {
 
         <!-- 右侧操作区域 -->
         <div class="flex items-center space-x-6">
-          <!-- 咨询按钮 -->
-          <a 
-            href="/contact" 
-            class="hidden md:inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:from-blue-500 hover:to-blue-400"
-          >
-            免费咨询
-          </a>
-          
           <!-- 暗黑模式切换 -->
           <button
             @click="toggleDarkMode"

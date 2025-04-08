@@ -38,11 +38,8 @@ onMounted(() => {
         
         <!-- 按钮组 -->
         <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-          <router-link to="/about" class="action-btn px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 dark:from-blue-500 dark:to-indigo-500">
+          <router-link to="/about" class="action-btn px-8 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
             了解更多
-          </router-link>
-          <router-link to="/contact" class="action-btn px-8 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-            联系我们
           </router-link>
         </div>
         
