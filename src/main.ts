@@ -3,10 +3,17 @@ import { createPinia } from 'pinia'
 import './style.css'
 import App from './App.vue'
 import router from './router'
+import { useGraphicsEngine } from './composables/useGraphicsEngine'
 
-const app = createApp(App)
+const initApp = async () => {
+  // Initialize graphics engine
+  const { initializeEngines } = useGraphicsEngine()
+  await initializeEngines()
 
-app.use(createPinia())
-app.use(router)
+  const app = createApp(App)
+  app.use(createPinia())
+  app.use(router)
+  app.mount('#app')
+}
 
-app.mount('#app')
+initApp()

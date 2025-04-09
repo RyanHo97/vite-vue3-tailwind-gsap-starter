@@ -83,6 +83,8 @@ onMounted(() => {
               v-for="link in [
                 { path: '/', name: '首页' },
                 { path: '/about', name: '关于' },
+                { path: '/gsapTest', name: 'GSAP' },
+                { path: '/threeTest', name: 'Threejs' },
               ]"
               :key="link.path"
               :to="link.path"

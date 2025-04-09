@@ -13,7 +13,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'About',
     component: () => import('../views/About.vue')
   },
-
+  {
+    path: '/threeTest',
+    name: 'ThreeTest',
+    component: () => import('../views/ThreeTest.vue')
+  },
+  {
+    path: '/gsapTest',
+    name: 'GsapTest',
+    component: () => import('../views/GsapTest.vue')
+  },
 ]
 
 // 创建路由实例

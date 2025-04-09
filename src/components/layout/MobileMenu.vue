@@ -36,6 +36,30 @@ const route = useRoute()
       >
         关于
       </router-link>
+      <router-link
+        to="/gsapTest"
+        class="block px-3 py-2 text-base font-medium"
+        :class="
+          route.path === '/gsapTest'
+            ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50'
+            : 'text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-white'
+        "
+        @click="emit('close')"
+      >
+        GSAP
+      </router-link>
+      <router-link
+        to="/threeTest"
+        class="block px-3 py-2 text-base font-medium"
+        :class="
+          route.path === '/threeTest'
+            ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50'
+            : 'text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-white'
+        "
+        @click="emit('close')"
+      >
+        Threejs
+      </router-link>
 
     </div>
   </div>
