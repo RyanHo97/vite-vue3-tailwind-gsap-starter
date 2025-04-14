@@ -37,8 +37,8 @@ onMounted(() => {
         </p>
         
         <!-- 按钮组 -->
-        <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-          <router-link to="/about" class="action-btn px-8 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
+          <router-link to="/about" class="action-btn w-40 px-8 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
             了解更多
           </router-link>
         </div>

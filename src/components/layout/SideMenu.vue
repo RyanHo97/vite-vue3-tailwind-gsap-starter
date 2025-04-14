@@ -14,17 +14,23 @@ const props = defineProps<{
 const emit = defineEmits(['select-item', 'menu-toggle'])
 
 // 控制侧边栏在移动设备上的展开/收起状态
-const isMenuOpen = ref(true)
+const isMenuOpen = ref(true) // 默认为打开状态，但在移动设备上会被checkMobile()修改
 const isMobile = ref(false)
 const sideMenuRef = ref<HTMLElement | null>(null)
 
 // 检测是否为移动设备
 const checkMobile = () => {
+  const wasMobile = isMobile.value
   isMobile.value = window.innerWidth < 768
+  
   // 在移动设备上默认收起侧边栏
-  if (isMobile.value && isMenuOpen.value) {
-    isMenuOpen.value = false
-  } else if (!isMobile.value && !isMenuOpen.value) {
+  if (isMobile.value) {
+    // 只有在首次检测或从桌面切换到移动设备时才自动收起
+    if (!wasMobile || (wasMobile !== isMobile.value)) {
+      isMenuOpen.value = false
+    }
+  } else if (!isMobile.value && !isMenuOpen.value && (wasMobile !== isMobile.value)) {
+    // 从移动设备切换到桌面时自动展开
     isMenuOpen.value = true
   }
 }
@@ -45,7 +51,7 @@ const animateMenu = () => {
     // 展开侧边栏
     gsap.to(sideMenuRef.value, {
       x: 0,
-      width: isMobile.value ? '80%' : '240px',
+      width: isMobile.value ? '100%' : '240px',
       minWidth: isMobile.value ? '0' : '240px',
       duration: 0.3,
       ease: 'power2.out',
@@ -59,7 +65,7 @@ const animateMenu = () => {
   } else {
     // 收起侧边栏 - 修改动画逻辑，确保菜单收起后文字内容完全隐藏
     gsap.to(sideMenuRef.value, {
-      x: '-100%',
+      x: isMobile.value ? '-100%' : '-100%',
       duration: 0.3,
       ease: 'power2.out',
       onStart: () => {
@@ -94,9 +100,13 @@ onMounted(() => {
   // 初始化侧边栏位置
   if (sideMenuRef.value) {
     if (!isMenuOpen.value) {
-      // 移动端时收起到左侧边缘，但保留三角形指示器可见
-      const offset = isMobile.value ? 'calc(-100% + 16px)' : '-100%'
-      gsap.set(sideMenuRef.value, { x: offset })
+      // 移动端时完全收起到左侧边缘
+      gsap.set(sideMenuRef.value, { 
+        x: '-100%',
+        width: 0,
+        minWidth: 0,
+        overflow: 'hidden'
+      })
     }
   }
 })
@@ -180,10 +190,10 @@ onBeforeUnmount(() => {
   top: 50%;
   left: 0; /* 默认位于左侧边缘 */
   transform: translateY(-50%);
-  width: 16px;
-  height: 32px;
-  background-color: #3b82f6; /* 蓝色背景 */
-  border-radius: 0 4px 4px 0;
+  width: 28px; /* 增大按钮宽度 */
+  height: 52px; /* 增大按钮高度 */
+  background-color: rgba(59, 130, 246, 0.85); /* 蓝色背景带透明度 */
+  border-radius: 0 8px 8px 0; /* 增大圆角 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,9 +211,9 @@ onBeforeUnmount(() => {
 .triangle {
   width: 0;
   height: 0;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-right: 6px solid white; /* 默认指向右侧（关闭状态） */
+  border-top: 10px solid transparent; /* 增大三角形 */
+  border-bottom: 10px solid transparent; /* 增大三角形 */
+  border-right: 10px solid white; /* 默认指向右侧（关闭状态），增大三角形 */
   transition: transform 0.3s ease;
 }
 
@@ -213,15 +223,22 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .side-menu {
-    width: 80%;
-    max-width: 280px;
+    width: 0; /* 默认收起状态 */
+    min-width: 0;
     left: 0; /* 确保在移动端贴边放置 */
+  }
+  
+  /* 当菜单展开时，铺满整个屏幕宽度 */
+  .side-menu:not(.menu-collapsed) {
+    width: 100% !important;
+    max-width: 100%;
   }
   
   /* 移动端三角形指示器样式调整 */
   .menu-toggle-triangle {
-    right: -16px;
-    background-color: #3b82f6;
+    width: 32px; /* 在移动端进一步增大按钮宽度 */
+    height: 56px; /* 在移动端进一步增大按钮高度 */
+    background-color: rgba(59, 130, 246, 0.9); /* 增加透明度 */
   }
 }
 </style>

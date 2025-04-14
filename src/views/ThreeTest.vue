@@ -1,16 +1,17 @@
 <template>
   <div class="three-container">
     
-    <div class="flex h-[calc(100vh)]">
+    <div class="flex h-[calc(100vh)] relative" :class="{ 'menu-collapsed': !isMenuOpen }">
       <!-- 左侧菜单 -->
       <SideMenu 
         :menu-items="menuItems" 
         title="Three.js 案例" 
         @select-item="selectExample"
+        @menu-toggle="handleMenuToggle"
       />
       
       <!-- 右侧内容区域 -->
-      <div class="flex-1 p-4 overflow-y-auto bg-black">
+      <div class="flex-1 p-4 overflow-y-auto bg-black w-full transition-all duration-300">
         <div v-if="currentExample === 'basic'" class="h-full" ref="container"></div>
         
         <div v-if="currentExample === 'geometry'" class="h-full" ref="container"></div>
@@ -44,6 +45,9 @@ const container = ref<HTMLElement | null>(null)
 const { loadEngine, isEngineLoaded } = useGraphicsEngine()
 const themeStore = useThemeStore()
 
+// 控制侧边栏状态
+const isMenuOpen = ref(true)
+
 // 菜单项配置
 const menuItems = ref([
   { id: 'basic', title: '基础立方体', active: true },
@@ -53,6 +57,11 @@ const menuItems = ref([
 
 // 当前选中的示例
 const currentExample = ref('basic')
+
+// 处理菜单切换事件
+const handleMenuToggle = (isOpen: boolean) => {
+  isMenuOpen.value = isOpen
+}
 
 // 选择示例
 const selectExample = (id: string) => {
@@ -88,6 +97,8 @@ const selectExample = (id: string) => {
   // 确保DOM更新完成后再重新初始化场景
   nextTick(() => {
     initThree()
+    // 确保在场景切换后重新调整大小
+    handleResize()
   })
 }
 
@@ -120,7 +131,11 @@ const initThree = () => {
   // 创建渲染器
   renderer = new WebGLRenderer({ antialias: true })
   renderer.setSize(container.value.clientWidth, container.value.clientHeight)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)) // 设置像素比例，提高清晰度
   container.value.appendChild(renderer.domElement)
+  
+  // 确保初始尺寸正确
+  handleResize()
 
   // 根据当前示例初始化不同场景
   if (currentExample.value === 'basic') {
@@ -132,6 +147,9 @@ const initThree = () => {
     })
     cube = new Mesh(geometry, material)
     scene.add(cube)
+    
+    // 调整模型位置和大小以适应容器
+    adjustModelToContainer(cube)
   } else if (currentExample.value === 'geometry') {
     // 几何体示例
     const geometries = [
@@ -150,6 +168,9 @@ const initThree = () => {
       const mesh = new Mesh(geo, material)
       mesh.position.x = (i - 1) * 3
       scene.add(mesh)
+      
+      // 调整几何体模型大小以适应容器
+      adjustModelToContainer(mesh)
     })
   } else if (currentExample.value === 'lighting') {
     // 光照与材质
@@ -161,6 +182,9 @@ const initThree = () => {
     })
     cube = new Mesh(geometry, material)
     scene.add(cube)
+    
+    // 调整光照场景中的模型大小以适应容器
+    adjustModelToContainer(cube)
     
     // 添加光源 - 根据主题模式调整强度和颜色
     const lightIntensity = themeStore.isDarkMode ? 0.8 : 1.5
@@ -180,6 +204,30 @@ const initThree = () => {
   animate()
 }
 
+// 调整模型大小和位置以适应容器
+const adjustModelToContainer = (model: Mesh) => {
+  if (!container.value || !model) return
+  
+  // 获取容器的宽高比
+  const containerAspect = container.value.clientWidth / container.value.clientHeight
+  
+  // 根据容器宽高比调整模型的缩放
+  const scale = containerAspect < 1 ? 0.8 : 1.2
+  model.scale.set(scale, scale, scale)
+  
+  // 根据容器大小调整相机位置
+  const cameraDistance = containerAspect < 1 ? 6 : 5
+  camera.position.z = cameraDistance
+  
+  // 根据容器大小调整模型位置
+  // 在移动设备上（竖屏）调整Y轴位置
+  if (containerAspect < 1) {
+    model.position.y = model.position.y || 0 // 保留原始Y轴位置
+  }
+  
+  camera.updateProjectionMatrix()
+}
+
 // 动画循环
 const animate = () => {
   animationFrameId = requestAnimationFrame(animate)
@@ -193,13 +241,40 @@ const animate = () => {
   renderer.render(scene, camera)
 }
 
-// 处理窗口大小变化
-const handleResize = () => {
-  if (!container.value) return
+// ResizeObserver实例
+let resizeObserver: ResizeObserver | null = null
 
-  camera.aspect = container.value.clientWidth / container.value.clientHeight
+// 处理容器大小变化
+const handleResize = (entries?: ResizeObserverEntry[]) => {
+  if (!container.value || !camera || !renderer) return
+  
+  // 获取容器的当前尺寸
+  const width = container.value.clientWidth
+  const height = container.value.clientHeight
+  
+  // 更新相机宽高比
+  camera.aspect = width / height
   camera.updateProjectionMatrix()
-  renderer.setSize(container.value.clientWidth, container.value.clientHeight)
+  
+  // 更新渲染器尺寸
+  renderer.setSize(width, height)
+  
+  // 更新像素比例，确保在高DPI显示器上渲染清晰
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  
+  // 如果当前场景中有模型，调整模型大小以适应新的容器尺寸
+  if (cube) {
+    adjustModelToContainer(cube)
+  }
+  
+  // 对于几何体示例，需要调整所有模型
+  if (currentExample.value === 'geometry' && scene) {
+    scene.children.forEach(child => {
+      if (child instanceof Mesh) {
+        adjustModelToContainer(child)
+      }
+    })
+  }
 }
 
 onMounted(async () => {
@@ -211,7 +286,12 @@ onMounted(async () => {
     
     // 初始化场景
     initThree()
-    window.addEventListener('resize', handleResize)
+    
+    // 使用ResizeObserver监听容器尺寸变化
+    if (container.value) {
+      resizeObserver = new ResizeObserver(handleResize)
+      resizeObserver.observe(container.value)
+    }
     
     // 监听主题变化
     watch(() => themeStore.isDarkMode, () => {
@@ -227,7 +307,12 @@ onBeforeUnmount(() => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId)
   }
-  window.removeEventListener('resize', handleResize)
+  
+  // 清理ResizeObserver
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
   
   if (container.value) {
     container.value.innerHTML = ''
@@ -238,6 +323,11 @@ onBeforeUnmount(() => {
     lights.forEach(light => scene.remove(light))
     lights = []
   }
+  
+  // 清理渲染器
+  if (renderer) {
+    renderer.dispose()
+  }
 })
 </script>
 
@@ -246,5 +336,11 @@ onBeforeUnmount(() => {
   width: 100%;
   min-height: 100vh;
   background-color: #000;
+}
+
+/* 菜单收起状态下的样式 */
+.menu-collapsed .side-menu {
+  width: 0;
+  min-width: 0;
 }
 </style>
